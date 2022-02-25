@@ -2,11 +2,12 @@ import { View, Text, Platform, Dimensions } from 'react-native'
 import React from 'react'
 
 const Background = () => {
-  const dimensiones = () => {
+
+ /*  const dimensiones = () => {
     console.log("El ancho de la pantalla es:", Dimensions.get('window').width);
     console.log("La altura de la pantalla es:", Dimensions.get('window').height);
     console.log('La resolución de la pantalla actual:', Dimensions.get('window').scale);
-  }
+  } */
 
   return (
     <View
@@ -22,7 +23,7 @@ const Background = () => {
 
       }}
 
-      {...dimensiones()}
+      /* {...dimensiones()} */
     />
   )
 }
