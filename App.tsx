@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, { Children } from 'react';
+import React from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,11 +7,14 @@ import {
 import { NavigationContainer } from '@react-navigation/native';
 import { Navigator } from './src/navigator/Navigator';
 import { AuthProvider } from './src/context/AuthContext';
+import { ProductsProvider } from './src/context/ProducsContext';
 
 const AppState = ({ children }: any) => {
   return (
     <AuthProvider>
-      {children}
+      <ProductsProvider>
+        {children}
+      </ProductsProvider>
     </AuthProvider>
   )
 }

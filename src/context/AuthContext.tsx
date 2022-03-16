@@ -83,9 +83,6 @@ export const AuthProvider = ({ children }: any) => {
     const singUp = async ({ nombre, correo, password }: RegisterData) => {
         try {
             const resp = await productosApi.post<LoginResponse>('/usuarios', { nombre, correo, password, rol: 'USER_ROLE' });
-            console.log('====================================');
-            console.log({ resp });
-            console.log('====================================');
             dispach({
                 type: 'singUp',
                 payload: {
@@ -96,14 +93,11 @@ export const AuthProvider = ({ children }: any) => {
 
             await AsyncStorage.setItem('token', resp.data.token);
         } catch (error: any) {
-            console.log(error);
             dispach({
                 type: 'addError',
                 payload: error.response.data.errors[0].msg || 'Usuario no registrado'
             })
-
         }
-
     };
 
     const logOut = async () => {
@@ -113,10 +107,10 @@ export const AuthProvider = ({ children }: any) => {
             type: 'logout'
         })
     };
+
     const removeError = () => {
         dispach({
             type: 'removeError'
-
         })
     };
 
