@@ -1,9 +1,10 @@
-import React from 'react';
-import { View, Text, TextInput, Platform, KeyboardAvoidingView, Keyboard, TouchableOpacity } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { View, Text, TextInput, Platform, KeyboardAvoidingView, Keyboard, TouchableOpacity, Alert } from 'react-native';
 import WhiteLogo from '../components/WhiteLogo';
 import { loginStyles } from '../theme/LoginTheme';
 import { useForm } from '../hooks/useForm';
 import { StackScreenProps } from '@react-navigation/stack';
+import { AuthContext } from '../context/AuthContext';
 
 
 interface Props extends StackScreenProps<any, any> { }
@@ -12,10 +13,29 @@ const RegisterScreen = ({ navigation }: Props) => {
     name: '',
     email: '',
     password: ''
-  })
+  });
+
+  const { singUp, errorMessage, removeError } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (errorMessage.length === 0) return;
+    Alert.alert(
+      'Error al registrar el usuario',
+      errorMessage,
+      [
+        {
+          text: 'OK',
+          onPress: removeError
+        }
+      ]
+
+    )
+  }, [errorMessage])
+
 
   const onRegister = () => {
     Keyboard.dismiss();
+    singUp({nombre: name, correo: email, password})
     console.log({ name, email, password });
   }
   return (
