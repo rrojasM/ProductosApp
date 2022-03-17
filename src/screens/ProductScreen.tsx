@@ -1,7 +1,8 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TextInput, Button, Image, Alert } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { Picker } from '@react-native-picker/picker'
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { ProductsStackParams } from '../navigator/ProductsNavigator';
 import { useCategories } from '../hooks/useCategories';
 import { useForm } from '../hooks/useForm';
@@ -12,9 +13,10 @@ interface Props extends StackScreenProps<ProductsStackParams, 'ProductScreen'> {
 
 const ProductScreen = ({ navigation, route }: Props) => {
     const { id = '', name = '' } = route.params;
+    const [tempUri, setTempUri] = useState<string>()
 
     const { categorias } = useCategories();
-    const { loadProductById, addProduct, updateProduct, deleteProduct } = useContext(ProductsContext)
+    const { loadProductById, addProduct, updateProduct, deleteProduct, uploadImage } = useContext(ProductsContext)
 
     const { _id, categoriaId, nombre, img, form, onChange, setFormValue } = useForm({
         _id: id,
@@ -70,13 +72,46 @@ const ProductScreen = ({ navigation, route }: Props) => {
 
         if (id.length === 0) return;
         Alert.alert(
-            'Eliminar Producto', 
+            'Eliminar Producto',
             '¿Estas seguro de eliminar este producto?',
             [
                 {
-                text: 'OK', onPress: () => {deleteProduct(id); navigation.navigate('ProdutsScreen')}
+                    text: 'OK', onPress: () => { deleteProduct(id); navigation.navigate('ProdutsScreen') }
                 }
             ])
+    }
+
+    const takePhoto = () => {
+        launchCamera({
+            mediaType: 'photo',
+            quality: 0.5
+        }, (resp) => {
+            if (resp.didCancel) return;
+            if (!resp.assets![0].uri) return;
+
+            setTempUri(resp.assets![0].uri);
+            console.log(resp.assets![0]);
+            if (resp.assets) {
+                const fileName = (resp.assets[0].fileName) ? resp.assets[0].fileName : 'foto.jpg';
+                const type = (resp.assets[0].type) ? resp.assets[0].type : 'image/jpeg';
+                uploadImage(resp.assets[0].uri, fileName, type, _id);
+            }
+        });
+    }
+
+    const takeFotoGalery = () => {
+        launchImageLibrary({
+            mediaType: 'photo',
+            quality: 0.5
+        }, (res) => {
+
+            if (res.didCancel) return;
+            if (!res.assets?.[0].uri) return
+
+            setTempUri(res.assets?.[0].uri)
+
+            console.log('DIDcancel ', res.didCancel);
+        })
     }
 
     return (
@@ -114,9 +149,9 @@ const ProductScreen = ({ navigation, route }: Props) => {
                         onPress={saveOrUpdate}
                         color='#5856D6'
                     />
-
+                    <View style={{ height: 10 }} />
                     <Button
-                        
+
                         title='Delete'
                         onPress={deleteProductId}
                         color='#5856D6'
@@ -128,14 +163,14 @@ const ProductScreen = ({ navigation, route }: Props) => {
                                 <Button
                                     title='Cámara'
                                     // TODO: POR HACER
-                                    onPress={() => { console.log('Guardar') }}
+                                    onPress={takePhoto}
                                     color='#5856D6'
                                 />
                                 <View style={{ width: 10 }} />
                                 <Button
                                     title='Galeria'
                                     // TODO: POR HACER
-                                    onPress={() => { console.log('Guardar') }}
+                                    onPress={takeFotoGalery}
                                     color='#5856D6'
                                 />
 
@@ -145,7 +180,7 @@ const ProductScreen = ({ navigation, route }: Props) => {
                     }
 
                     {
-                        (img.length > 0) && (
+                        (img.length > 0 && !tempUri) && (
                             <Image
                                 source={{ uri: img }}
                                 style={{ marginTop: 20, width: '100%', height: 300 }}
@@ -154,6 +189,16 @@ const ProductScreen = ({ navigation, route }: Props) => {
                     }
 
                     {/* TODO: Mostrar imagen temporal */}
+
+
+                    {
+                        (tempUri) && (
+                            <Image
+                                source={{ uri: tempUri }}
+                                style={{ marginTop: 20, width: '100%', height: 300 }}
+                            />
+                        )
+                    }
 
                 </ScrollView>
 

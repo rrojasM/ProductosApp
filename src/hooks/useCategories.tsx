@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import productosApi from '../api/ProductosApi';
-import { CategoriesResponse, Categoria } from '../interfaces/AppInterfaces';
+import { CagetoriesResponse, Categoria } from '../interfaces/AppInterfaces';
 
 export const useCategories = () => {
 
@@ -14,7 +14,7 @@ export const useCategories = () => {
     }, [])
 
     const getCategories = async () => {
-        const resp = await productosApi.get<CategoriesResponse>('/categorias');
+        const resp = await productosApi.get<CagetoriesResponse>('/categorias');
         setCategorias(resp.data.categorias);
         setIsLoading(false);
     }
