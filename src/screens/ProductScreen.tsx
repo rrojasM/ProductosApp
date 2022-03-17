@@ -76,7 +76,10 @@ const ProductScreen = ({ navigation, route }: Props) => {
             '¿Estas seguro de eliminar este producto?',
             [
                 {
-                    text: 'OK', onPress: () => { deleteProduct(id); navigation.navigate('ProdutsScreen') }
+                    text: 'ELIMINAR', onPress: () => { deleteProduct(id); navigation.navigate('ProdutsScreen') }
+                },
+                {
+                    text: 'CANCELAR'
                 }
             ])
     }
@@ -103,14 +106,17 @@ const ProductScreen = ({ navigation, route }: Props) => {
         launchImageLibrary({
             mediaType: 'photo',
             quality: 0.5
-        }, (res) => {
+        }, (resp) => {
+            if (resp.didCancel) return;
+            if (!resp.assets![0].uri) return;
 
-            if (res.didCancel) return;
-            if (!res.assets?.[0].uri) return
-
-            setTempUri(res.assets?.[0].uri)
-
-            console.log('DIDcancel ', res.didCancel);
+            setTempUri(resp.assets![0].uri);
+            console.log(resp.assets![0]);
+            if (resp.assets) {
+                const fileName = (resp.assets[0].fileName) ? resp.assets[0].fileName : 'foto.jpg';
+                const type = (resp.assets[0].type) ? resp.assets[0].type : 'image/jpeg';
+                uploadImage(resp.assets[0].uri, fileName, type, _id);
+            }
         })
     }
 
@@ -152,7 +158,7 @@ const ProductScreen = ({ navigation, route }: Props) => {
                     <View style={{ height: 10 }} />
                     <Button
 
-                        title='Delete'
+                        title='Eliminar Producto'
                         onPress={deleteProductId}
                         color='#5856D6'
                     />
@@ -181,6 +187,7 @@ const ProductScreen = ({ navigation, route }: Props) => {
 
                     {
                         (img.length > 0 && !tempUri) && (
+                            
                             <Image
                                 source={{ uri: img }}
                                 style={{ marginTop: 20, width: '100%', height: 300 }}

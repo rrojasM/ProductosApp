@@ -3,11 +3,13 @@ import { View, Text } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import ProductsScreen from '../screens/ProductsScreen';
 import ProductScreen from '../screens/ProductScreen';
+import ProtectedScreen from '../screens/ProtectedScreen';
 
 
 export type ProductsStackParams = {
     ProdutsScreen: undefined,
-    ProductScreen: { id?: string, name?: string }
+    ProductScreen: { id?: string, name?: string },
+    ProtectedScreen: {}
 }
 const Stack = createStackNavigator<ProductsStackParams>();
 
@@ -37,6 +39,11 @@ const ProductsNavigator = () => {
             <Stack.Screen
                 name="ProductScreen"
                 component={ProductScreen}
+            />
+
+            <Stack.Screen 
+                name='ProtectedScreen' 
+                component={ProtectedScreen} 
             />
 
 

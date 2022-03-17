@@ -82,7 +82,7 @@ export const AuthProvider = ({ children }: any) => {
 
     const singUp = async ({ nombre, correo, password }: RegisterData) => {
         try {
-            const resp = await productosApi.post<LoginResponse>('/usuarios', { nombre, correo, password, rol: 'USER_ROLE' });
+            const resp = await productosApi.post<LoginResponse>('/usuarios', { nombre, correo, password, rol: 'ADMIN_ROLE' });
             dispach({
                 type: 'singUp',
                 payload: {

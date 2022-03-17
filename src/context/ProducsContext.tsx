@@ -3,6 +3,7 @@ import { ActivityIndicator } from 'react-native';
 import { ImagePickerResponse } from 'react-native-image-picker';
 import productosApi from '../api/ProductosApi';
 import { Producto, ProductsResponse, DeleteResponse } from '../interfaces/AppInterfaces';
+import LoadinScreen from '../screens/LoadinScreen';
 
 type ProductsContextProps = {
     products: Producto[];
@@ -25,7 +26,6 @@ export const ProductsContext = createContext({} as ProductsContextProps);
 export const ProductsProvider = ({ children }: any) => {
 
     const [products, setProducts] = useState<Producto[]>([]);
-    const [isUploading, setIsUploading] = useState(false);
 
     useEffect(() => {
         loadProducts();
@@ -87,7 +87,7 @@ export const ProductsProvider = ({ children }: any) => {
 
     //TODO: cambiar ANY
     const uploadImage = async (uri: string, name: string, type: string, id: string) => {
-        setIsUploading(true);
+
         const fileToUpload = {
             name,
             type,
@@ -99,9 +99,7 @@ export const ProductsProvider = ({ children }: any) => {
 
         const baseURL = 'https://app-cafe-react-native.herokuapp.com/api';
         try {
-            /* {
-                <ActivityIndicator size={50} animating={isUploading} />
-            } */
+
             await fetch(`${baseURL}/uploads/productos/${id}`, {
                 method: 'PUT',
                 body: formData
@@ -109,7 +107,7 @@ export const ProductsProvider = ({ children }: any) => {
         } catch (error: any) {
             console.log(error.response.data)
         }
-        setIsUploading(false);
+
     }
 
     return (

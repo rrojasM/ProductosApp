@@ -7,7 +7,7 @@ import { AuthContext } from '../context/AuthContext';
 
 
 interface Props extends StackScreenProps<ProductsStackParams> { };
-const ProductsScreen = ({ navigation }: Props) => {
+const ProductsScreen = ({ navigation }: Props, ) => {
 
     const { products, loadProducts } = useContext(ProductsContext);
     const { logOut } = useContext(AuthContext)
@@ -39,6 +39,9 @@ const ProductsScreen = ({ navigation }: Props) => {
 
     }
 
+    const infoUsuario = () =>{
+        navigation.navigate('ProtectedScreen', {})
+    }
 
     return (
         <>
@@ -79,6 +82,12 @@ const ProductsScreen = ({ navigation }: Props) => {
                     title='Logout'
                     color='#5856d6'
                     onPress={logOut}
+                />
+                <View style={{ height: 10 }} />
+                <Button
+                    title='Info Usuario'
+                    color='#5856d6'
+                    onPress={infoUsuario}
                 />
 
             </View>

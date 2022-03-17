@@ -31,7 +31,7 @@ export const Navigator = () => {
           ) : (
             <>
               <Stack.Screen name="ProductsNavigator" component={ProductsNavigator} />
-              <Stack.Screen name='ProtectedScreen' component={ProtectedScreen} />
+              
             </>
 
           )
